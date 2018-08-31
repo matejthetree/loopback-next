@@ -213,6 +213,7 @@ export class RestServer extends Context implements Server, HttpServerLike {
       maxAge: 86400,
       credentials: true,
     };
+    // Set up CORS
     this._expressApp.use(cors(corsOptions));
 
     // Place the assets router here before controllers
@@ -415,7 +416,7 @@ export class RestServer extends Context implements Server, HttpServerLike {
     // 127.0.0.1
     let host =
       (request.get('x-forwarded-host') || '').split(',')[0] ||
-      request.headers.host!.replace(/:[0-9]+$/, '');
+      request.headers.host!.replace(/:([0-9]+)$/, '');
     let port =
       (request.get('x-forwarded-port') || '').split(',')[0] ||
       this.config.port ||
@@ -578,6 +579,10 @@ export class RestServer extends Context implements Server, HttpServerLike {
       );
     }
     this._routerForStaticAssets.use(path, express.static(rootDir, options));
+  }
+
+  get staticRouter() {
+    return this._routerForStaticAssets;
   }
 
   /**
