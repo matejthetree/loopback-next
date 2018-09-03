@@ -133,7 +133,7 @@ module.exports = class ModelGenerator extends ArtifactGenerator {
         },
         {
           name: 'id',
-          message: 'Is ID field?',
+          message: 'Is this the ID property?',
           type: 'confirm',
           default: false,
           when: answers => {
@@ -145,7 +145,7 @@ module.exports = class ModelGenerator extends ArtifactGenerator {
         },
         {
           name: 'required',
-          message: 'Required?:',
+          message: 'Is this a required property?',
           type: 'confirm',
           default: false,
         },
