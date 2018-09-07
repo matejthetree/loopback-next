@@ -18,7 +18,7 @@
     },
     "run": {
       "prefix": false,
-      "loglevel": "silent",
+      "loglevel": "info",
       "parallel": true
     },
     "clean": {

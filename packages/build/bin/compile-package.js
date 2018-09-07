@@ -151,7 +151,17 @@ function run(argv, options) {
   } else {
     options = options || {};
   }
-  return utils.runCLI('typescript/lib/tsc', args, {cwd, ...options});
+  const child = utils.runCLI('typescript/lib/tsc', args, {cwd, ...options});
+  if (child && typeof child.on === 'function') {
+    child.on('exit', (code, signal) => {
+      if (!fs.existsSync(outDir)) {
+        console.log('*** TSC incomplete: %s ***', outDir);
+      } else {
+        console.log(outDir);
+      }
+    });
+  }
+  return child;
 }
 
 module.exports = run;
