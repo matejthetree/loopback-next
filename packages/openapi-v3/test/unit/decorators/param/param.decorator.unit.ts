@@ -24,7 +24,7 @@ describe('Routing metadata for parameters', () => {
       };
 
       class MyController {
-        @get('/greet')
+        @get('/greet', {responses: {'200': {description: ''}}})
         greet(@param(paramSpec) name: string) {}
       }
 
@@ -39,7 +39,7 @@ describe('Routing metadata for parameters', () => {
 
     it('infers ts primitive types', () => {
       class MyController {
-        @patch('/update/{id}')
+        @patch('/update/{id}', {responses: {'200': {description: ''}}})
         update(
           @param({
             name: 'id',
@@ -128,7 +128,7 @@ describe('Routing metadata for parameters', () => {
 
     it('infers array type without explicit type', () => {
       class MyController {
-        @get('/greet')
+        @get('/greet', {responses: {'200': {description: ''}}})
         greet(
           @param({
             name: 'names',
@@ -176,7 +176,7 @@ describe('Routing metadata for parameters', () => {
 
     it('infers array parameter type with `any`', () => {
       class MyController {
-        @get('/greet')
+        @get('/greet', {responses: {'200': {description: ''}}})
         greet(
           @param.array('names', 'query', {type: 'string'})
           names: /* tslint:disable-next-line:no-any */
