@@ -52,7 +52,7 @@ docker run \
 
 #### Updating datasource
 
-Update `db.datasource.json` to use the Cloudan connector.
+Update `db.datasource.json` to use the Cloudant connector.
 
 ```js
 {
@@ -67,7 +67,7 @@ Update `db.datasource.json` to use the Cloudan connector.
 Install the `loopback-connector-cloudant` package.
 
 ```sh
-$ npm i loopback-connector-cloudant -S
+$ npm i loopback-connector-cloudant -s
 ```
 
 #### Updating npm script
@@ -81,7 +81,7 @@ We will use the `cfenv` module to simplify some of the Cloud Foundry related
 operations. Install `cfenv` in the project directory.
 
 ```sh
-$ npm i cfenv -S
+$ npm i cfenv -s
 ```
 
 Update the `index.ts` file to the following to enable service binding.
@@ -92,21 +92,21 @@ import {ApplicationConfig} from '@loopback/core';
 const datasourceDb = require('./datasources/db.datasource.json');
 const cfenv = require('cfenv');
 const appEnv = cfenv.getAppEnv();
-// 'myCloudant' is the name of the provisioned Cloudant service
-const dbUrl = appEnv.getServiceURL('myCloudant');
-
 if (!appEnv.isLocal) {
-  datasourceDb.url = dbUrl;
+  // 'myCloudant' is the name of the provisioned Cloudant service
+  datasourceDb = Object.assign({}, datasourceDb, {
+    url: appEnv.getServiceURL('myCloudant'),
+  });
+  app.bind('datasources.config.db').to(datasourceDb);
 }
 
 export async function main(options?: ApplicationConfig) {
-  // Set the port assined for the app
-  if (!options) {
-    options = {rest: {port: appEnv.port}};
-  } else {
-    if (!options.rest) options.rest = {};
-    options.rest.port = appEnv.port || options.rest.port;
-  }
+  // Set the port assigned for the app
+  if (!options) options = {};
+  if (!options.rest) options.rest = {};
+
+  if (appEnv.isLocal) options.rest.port = options.rest.port;
+  else options.rest.port = appEnv.port;
 
   const app = new TodoListApplication(options);
   await app.boot();
@@ -134,7 +134,9 @@ So, create a
 [Node.js SDK app](https://console.bluemix.net/catalog/starters/sdk-for-nodejs)
 and connect it to the provisioned Cloudant service.
 
-Make a note of the name of the app. For eg: `mylb4app`.
+Make a note of the name of the app. Let's say you named it `mylb4app`. We will
+be using this name as a placeholder for the unique name you will choose yourself
+eventually. Replace `mylb4app` with your app's name in all instances in the doc.
 
 ## Deploying the app
 
