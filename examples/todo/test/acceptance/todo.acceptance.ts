@@ -133,6 +133,20 @@ describe('Application', () => {
     });
   });
 
+  it('queries todos with a filter', async () => {
+    await givenTodoInstance({title: 'wake up', isComplete: true});
+
+    const todoInProgress = await givenTodoInstance({
+      title: 'go to sleep',
+      isComplete: false,
+    });
+
+    await client
+      .get('/todos')
+      .query({filter: {where: {isComplete: false}}})
+      .expect(200, [deserializedFromJson(todoInProgress)]);
+  });
+
   /*
    ============================================================================
    TEST HELPERS
@@ -178,5 +192,15 @@ describe('Application', () => {
 
   async function givenTodoInstance(todo?: Partial<Todo>) {
     return await todoRepo.create(givenTodo(todo));
+  }
+
+  // JSON transport does not preserve properties that are undefined
+  // As a result, deepEqual checks fail because the expected model
+  // value contains these undefined property values, while the actual
+  // result returned by REST API does not.
+  // Use this function to convert a model instance into a data object
+  // as returned by REST API
+  function deserializedFromJson<T extends object>(value: T): T {
+    return JSON.parse(JSON.stringify(value));
   }
 });

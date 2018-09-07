@@ -4,8 +4,17 @@
 // License text available at https://opensource.org/licenses/MIT
 
 import {inject} from '@loopback/core';
-import {repository} from '@loopback/repository';
-import {del, get, param, patch, post, put, requestBody} from '@loopback/rest';
+import {repository, Filter} from '@loopback/repository';
+import {
+  del,
+  get,
+  param,
+  patch,
+  post,
+  put,
+  requestBody,
+  getFilterSchemaFor,
+} from '@loopback/rest';
 import {Todo} from '../models';
 import {TodoRepository} from '../repositories';
 import {GeocoderService} from '../services';
@@ -39,8 +48,10 @@ export class TodoController {
   }
 
   @get('/todos')
-  async findTodos(): Promise<Todo[]> {
-    return await this.todoRepo.find();
+  async findTodos(
+    @param.query.object('filter', getFilterSchemaFor(Todo)) filter?: Filter,
+  ): Promise<Todo[]> {
+    return await this.todoRepo.find(filter);
   }
 
   @put('/todos/{id}')
