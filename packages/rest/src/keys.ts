@@ -5,7 +5,12 @@
 
 import {CoreBindings} from '@loopback/core';
 import {BindingKey, Context} from '@loopback/context';
-import {OpenApiSpec} from '@loopback/openapi-v3-types';
+
+/**
+ * See https://github.com/Microsoft/TypeScript/issues/26985
+ */
+// import {OpenApiSpec} from '@loopback/openapi-v3-types';
+import {OpenAPIObject} from 'openapi3-ts';
 
 import {HttpHandler} from './http-handler';
 import {SequenceHandler} from './sequence';
@@ -75,7 +80,7 @@ export namespace RestBindings {
   /**
    * Binding key for setting and injecting an OpenAPI spec
    */
-  export const API_SPEC = BindingKey.create<OpenApiSpec>('rest.apiSpec');
+  export const API_SPEC = BindingKey.create<OpenAPIObject>('rest.apiSpec');
   /**
    * Binding key for setting and injecting a Sequence
    */
