@@ -55,6 +55,12 @@ import {Baz} from './models/baz.model';
 // things tidy and succinct!
 ```
 
+Let's export the repository from our export helper
+#### src/repositories/index.ts
+```ts
+export * from './todo.repository';
+```
+
 Our TodoRepository will extend a small base class that uses the
 `DefaultCrudRepository` class from
 [`@loopback/repository`](https://github.com/strongloop/loopback-next/tree/master/packages/repository)
